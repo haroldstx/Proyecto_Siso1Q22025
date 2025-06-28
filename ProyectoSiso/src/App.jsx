@@ -1,14 +1,19 @@
-import { useState } from 'react'
+
 import Login from './Components/Login.jsx'
-import { createRoot } from 'react-dom/client'
-import './App.css'
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AdminPage from './Components/AdminPage.jsx';
 
 function App() {
 
   return (
-    <>
-    <Login />
-    </>
+ 
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login /> } />
+        <Route path="/AMain" element={<AdminPage /> } />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
