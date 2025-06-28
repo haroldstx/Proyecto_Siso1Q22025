@@ -8,7 +8,6 @@ const Login = () => {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({
     identidad: '',
@@ -43,7 +42,7 @@ const Login = () => {
 
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('identidad', formData.identidad);
+      formDataToSend.append('DNI', formData.identidad);
       formDataToSend.append('telefono', formData.telefono);
 
       console.log('Enviando petición a:', '/Backend/test_conexion.php');
@@ -59,22 +58,24 @@ const Login = () => {
 
       console.log('Respuesta recibida del response de conexion:', response.status, response.statusText);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        const textResponse = await response.text();
-        console.error('Respuesta no es JSON:', textResponse);
-        throw new Error('El servidor no devolvió JSON válido');
-      }
-
       const data = await response.json();
       console.log('Datos recibidos:', data);
+
+      if (!response.ok) {
+        throw new Error(`${data.message || response.statusText}`);
+      }
       
       if (data.success) {
-        navigate('/mainpage'); 
+        // Guardar información del usuario en localStorage
+        localStorage.setItem('usuario', JSON.stringify({
+          identidad: data.data.identidad,
+          telefono: data.data.telefono,
+          rol: data.data.rol, 
+          yavoto: data.data.yavoto,
+        }));
+        
+        // Redirigir a la página principal
+        navigate('/mainpage');
       } else {
         // Manejar errores específicos de formato
         const errorMessage = data.message || 'Error en la validación';
@@ -101,7 +102,7 @@ const Login = () => {
       } else if (error.message.includes('status: 500')) {
         setError('Error interno del servidor. Revisa la consola del navegador para más detalles o verifica el código PHP.');
       } else {
-        setError(`Error de conexión: ${error.message}`);
+        setError(`${error.message}`);
       }
     } finally {
       setLoading(false);
@@ -188,11 +189,11 @@ const Login = () => {
         </div>
 
         {/* Illustration */}
-        <div className="hidden lg:flex items-center justify-center flex-1 max-w-md">
+        <div className="hidden lg:flex items-center justify-center flex-1">
           <img
             src="/src/assets/img/image.png"
             alt="Illustration"
-            className="w-full h-auto max-w-sm"
+            className="w-full h-auto max-w"
           />
         </div>
         

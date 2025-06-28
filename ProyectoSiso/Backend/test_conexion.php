@@ -2,7 +2,8 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, Accept, Origin');
+header('Access-Control-Allow-Credentials: false');
 
 // Si es una solicitud OPTIONS (preflight), responder y terminar
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
@@ -11,35 +12,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 try {
+    // Debug: Log de datos recibidos
+    error_log("Método: " . $_SERVER['REQUEST_METHOD']);
+    error_log("POST data: " . print_r($_POST, true));
+    error_log("Content-Type: " . ($_SERVER['CONTENT_TYPE'] ?? 'no definido'));
+    
     // Incluir conexión
     include 'conexion.php';
     
     // Verificar si la conexión está activa
     if ($conn->connect_error) {
-        throw new Exception("Error de conexión: " . $conn->connect_error);
+        throw new Exception("Error: " . $conn->connect_error);
     }
     
     // Si es POST, validar datos
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $identidad = $_POST['identidad'] ?? '';
+        $identidad = $_POST['DNI'] ?? '';
         $telefono = $_POST['telefono'] ?? '';
-        $errors = [];
+        
+        error_log("Identidad recibida: '" . $identidad . "'");
+        error_log("Teléfono recibido: '" . $telefono . "'");
         
         // Validaciones básicas
         if (empty($identidad)) {
-            $errors[] = "El número de identidad es requerido";
+            throw new Exception("El número de identidad es requerido");
         }
         
         if (empty($telefono)) {
-            $errors[] = "El número de teléfono es requerido";
+            throw new Exception("El número de teléfono es requerido");
         }
         
-        // Si faltan datos básicos, retornar error
-        if (!empty($errors)) {
-            throw new Exception(implode(". ", $errors));
-        }
-        
-        // Limpiar identidad (quitar guiones)
+        // Limpiar identidad (quitar guiones para comparación)
         $identidad_limpia = str_replace('-', '', $identidad);
         
         // Validar formato de identidad - Honduras: debe comenzar con 0, tener 13 dígitos
@@ -67,23 +70,35 @@ try {
             }
         }
         
-        // Validación adicional: verificar que los dígitos sean válidos para Honduras
-        $codigo_departamento = substr($identidad_limpia, 0, 4);
-        $codigos_validos = ['0101', '0201', '0301', '0401', '0501', '0601', '0701', '0801', '0901', '1001', '1101', '1201', '1301', '1401', '1501', '1601', '1701', '1801'];
+        // Consulta SQL para verificar si el usuario existe en la base de datos
+        // Buscamos por identidad limpia (sin guiones) y teléfono limpio
+        $query = "SELECT DNI, Telefono FROM Usuarios WHERE REPLACE(DNI, '-', '') = ? AND REPLACE(Telefono, ' ', '') = REPLACE(?, ' ', '')";
+        $stmt = $conn->prepare($query);
         
-        if (!in_array($codigo_departamento, $codigos_validos)) {
-            throw new Exception("Código de departamento inválido en la identidad. Verifique los primeros 4 dígitos");
+        if (!$stmt) {
+            throw new Exception("Error al preparar la consulta: " . $conn->error);
         }
         
-        // Si todo está bien con POST
+        $stmt->bind_param("ss", $identidad_limpia, $telefono_limpio);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 0) {
+            throw new Exception("Los datos de identidad y teléfono no coinciden con ningún usuario registrado en la base de datos");
+        }
+        
+        // Usuario encontrado, obtener sus datos
+        $user = $result->fetch_assoc();
+        $stmt->close();
+        
+        // Si todo está bien, responder con éxito
         echo json_encode([
             'success' => true,
-            'message' => 'Datos válidos y conexión exitosa',
+            'message' => 'Autenticación exitosa',
             'data' => [
                 'identidad' => $identidad,
-                'identidad_limpia' => $identidad_limpia,
                 'telefono' => $telefono,
-                'telefono_limpio' => $telefono_limpio
+                'authenticated' => true
             ]
         ]);
         
@@ -96,10 +111,16 @@ try {
     }
     
 } catch (Exception $e) {
+    error_log("Error en test_conexion.php: " . $e->getMessage());
     http_response_code(400);
     echo json_encode([
         'success' => false,
-        'message' => $e->getMessage()
+        'message' => $e->getMessage(),
+        'debug' => [
+            'method' => $_SERVER['REQUEST_METHOD'],
+            'post_data' => $_POST,
+            'content_type' => $_SERVER['CONTENT_TYPE'] ?? 'no definido'
+        ]
     ]);
 } finally {
     // Cerrar conexión solo si existe
