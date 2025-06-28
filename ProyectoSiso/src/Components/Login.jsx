@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -6,6 +7,8 @@ const Login = () => {
     telefono: ''
   });
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({
     identidad: '',
@@ -71,8 +74,7 @@ const Login = () => {
       console.log('Datos recibidos:', data);
       
       if (data.success) {
-        // Si la validación y conexión son exitosas, redirigir
-        window.location.href = '/Backend/votar_presidente.php';
+        navigate('/mainpage'); 
       } else {
         // Manejar errores específicos de formato
         const errorMessage = data.message || 'Error en la validación';

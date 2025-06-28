@@ -1,14 +1,23 @@
-import { useState } from 'react'
-import Login from './Components/Login.jsx'
-import { createRoot } from 'react-dom/client'
 import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Login from './Components/Login';
+import MainPage from './Components/MainPage';
+import CerrarVotaciones from './Components/CerrarVotaciones';
+import Votar from './Components/Votar';
+import Ganadores from './Components/Ganadores';
 
 function App() {
 
   return (
-    <>
-    <Login />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/mainpage" element={<MainPage />} />
+        <Route path="/cerrar-votaciones" element={<CerrarVotaciones />} />
+        <Route path="/votar" element={<Votar />} />
+        <Route path="/ganadores" element={<Ganadores />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

@@ -56,19 +56,14 @@ try {
         // Limpiar teléfono (quitar espacios y guiones)
         $telefono_limpio = str_replace([' ', '-'], '', $telefono);
         
-        // Debug: agregar log para ver el teléfono procesado
-        error_log("Teléfono original: " . $telefono);
-        error_log("Teléfono limpio: " . $telefono_limpio);
-        error_log("Longitud: " . strlen($telefono_limpio));
-        
         // Validar formato del teléfono Honduras: +504 seguido de 8 dígitos
         if (!preg_match('/^\+504\d{8}$/', $telefono_limpio)) {
             if (!preg_match('/^\+504/', $telefono_limpio)) {
                 throw new Exception("El número de teléfono debe comenzar con +504 (ejemplo: +504 9999-9999)");
             } elseif (strlen($telefono_limpio) != 12) {
-                throw new Exception("El número de teléfono debe tener 8 dígitos después de +504 (ejemplo: +504 9999-9999). Actual: " . strlen($telefono_limpio) . " caracteres");
+                throw new Exception("El número de teléfono debe tener 8 dígitos después de +504 (ejemplo: +504 9999-9999)");
             } else {
-                throw new Exception("Formato de teléfono inválido. Use el formato: +504 9999-9999. Recibido: " . $telefono_limpio);
+                throw new Exception("Formato de teléfono inválido. Use el formato: +504 9999-9999");
             }
         }
         

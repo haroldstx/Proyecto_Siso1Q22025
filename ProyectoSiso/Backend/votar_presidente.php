@@ -1,1 +1,0 @@
-<h2>Aqui se votara para el presidente</h2>
