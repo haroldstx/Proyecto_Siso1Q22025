@@ -1,11 +1,13 @@
 import { useState } from 'react'
+import Login from './Components/Login.jsx'
+import { createRoot } from 'react-dom/client'
 import './App.css'
 
 function App() {
 
   return (
     <>
-    <h1>Hola</h1>
+    <Login />
     </>
   )
 }
