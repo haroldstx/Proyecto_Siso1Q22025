@@ -143,8 +143,6 @@ CREATE TABLE `Usuarios` (
   `Telefono` varchar(20) DEFAULT NULL,
   `Rol` tinyint(1) DEFAULT NULL,
   `YaVoto` tinyint(1) DEFAULT 0,
-  `Correo` varchar(100) DEFAULT NULL,
-  `Password` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

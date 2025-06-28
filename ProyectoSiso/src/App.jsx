@@ -1,17 +1,23 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Login from './Components/Login';
+import MainPage from './Components/MainPage';
+import CerrarVotaciones from './Components/CerrarVotaciones';
+import Votar from './Components/Votar';
+import Ganadores from './Components/Ganadores';
 
-import Login from './Components/Login.jsx'
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AdminPage from './Components/AdminPage.jsx';
 
 function App() {
 
   return (
- 
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login /> } />
-        <Route path="/AMain" element={<AdminPage /> } />
+        <Route path="/" element={<Login />} />
+        <Route path="/mainpage" element={<MainPage />} />
+        <Route path="/cerrar-votaciones" element={<CerrarVotaciones />} />
+        <Route path="/votar" element={<Votar />} />
+        <Route path="/ganadores" element={<Ganadores />} />
       </Routes>
     </BrowserRouter>
   )

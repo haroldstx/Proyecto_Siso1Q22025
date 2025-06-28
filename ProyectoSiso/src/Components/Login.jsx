@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -6,6 +7,8 @@ const Login = () => {
     telefono: ''
   });
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({
     identidad: '',
@@ -71,8 +74,7 @@ const Login = () => {
       console.log('Datos recibidos:', data);
       
       if (data.success) {
-        // Si la validación y conexión son exitosas, redirigir
-        window.location.href = '/Backend/votar_presidente.php';
+        navigate('/mainpage'); 
       } else {
         // Manejar errores específicos de formato
         const errorMessage = data.message || 'Error en la validación';
@@ -107,84 +109,93 @@ const Login = () => {
   };
 
   return (
-
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      {/* Login Form */}
-      <div className="w-full max-w-md bg-white p-10 rounded-lg shadow-md flex flex-col justify-center">
-        <div className="flex justify-center mb-6">
-          <div className="text-orange-500 text-4xl">
-            <img src="/src/assets/img/votacion.png" alt="Logo" />
+    <div className="min-h-screen bg-gray-200 flex items-center justify-center px-4">
+      <div className="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-center gap-8">
+        
+        {/* Login Form */}
+        <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <img src="/src/assets/img/votacion.png" alt="Logo" className="h-16 w-16" />
           </div>
-        </div>
-        <h2 className="text-2xl font-bold text-center mb-2">Bienvenido al Centro de Votaciones De Honduras</h2>
-        <p className="text-center text-gray-500 mb-6">Por favor ingresa tus datos</p>
+          
+          {/* Title */}
+          <h2 className="text-2xl font-bold text-center mb-2 text-gray-800">
+            Bienvenido al Centro de Votaciones De Honduras
+          </h2>
+          <p className="text-center text-gray-500 mb-8">Por favor ingresa tus datos</p>
 
-        <form onSubmit={handleSubmit} className="bg-white py-9 rounded shadow-md w-full max-w-sm">
-          {error && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {error}
-            </div>
-          )}
-
-          <div className="mb-4">
-            <label className="block mb-2 text-sm font-semibold text-gray-700">Numero de Identidad </label>
-            <input
-              type="text"
-              name="identidad"
-              value={formData.identidad}
-              onChange={handleInputChange}
-              className={`w-full px-3 py-2 border rounded ${
-                fieldErrors.identidad ? 'border-red-500 bg-red-50' : 'border-gray-300'
-              }`}
-              placeholder="ejem: 0401-1999-99999"
-              required
-            />
-            {fieldErrors.identidad && (
-              <p className="mt-1 text-sm text-red-600">{fieldErrors.identidad}</p>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-center">
+                {error}
+              </div>
             )}
-          </div>
 
-          <div className="mb-9">
-            <label className="block mb-2 text-sm font-semibold text-gray-700">Telefono: </label>
+            <div>
+              <label className="block mb-2 text-sm font-semibold text-gray-700">
+                Número de Identidad
+              </label>
+              <input
+                type="text"
+                name="identidad"
+                value={formData.identidad}
+                onChange={handleInputChange}
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                  fieldErrors.identidad ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                }`}
+                placeholder="ejem: 0401-1999-99999"
+                required
+              />
+              {fieldErrors.identidad && (
+                <p className="mt-1 text-sm text-red-600">{fieldErrors.identidad}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block mb-2 text-sm font-semibold text-gray-700">
+                Teléfono
+              </label>
               <input
                 type="text"
                 name="telefono"
                 value={formData.telefono}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded ${
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
                   fieldErrors.telefono ? 'border-red-500 bg-red-50' : 'border-gray-300'
                 }`}
-                placeholder=" ejem: +504 9999-9999"
+                placeholder="ejem: +504 9999-9999"
                 required
               />
               {fieldErrors.telefono && (
                 <p className="mt-1 text-sm text-red-600">{fieldErrors.telefono}</p>
               )}   
-          </div>
+            </div>
 
-          <div className='mt-9 py-2 px-4'>
             <button
-            type="submit"
-            disabled={loading}
-            className={`w-full text-white rounded-full font-semibold transition ${
-              loading 
-                ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-black hover:bg-gray-800'
-            }`}>
-            {loading ? 'Validando...' : 'Log In'}
-          </button>
+              type="submit"
+              disabled={loading}
+              className={`w-full py-3 px-4 text-white font-semibold rounded-lg transition-all duration-200 ${
+                loading 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-blue-600 hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5'
+              }`}
+            >
+              {loading ? 'Validando...' : 'Iniciar Sesión'}
+            </button>
+          </form>
+        </div>
 
-          </div>
-        </form>
-      </div>
-
-      {/* Illustration */}
-      <div className="hidden lg:flex items-center justify-center flex-1">
-        <img
-          src="/src/assets/img/image.png"
-          alt="Illustration"
-          className="max-w-md"
-        />
+        {/* Illustration */}
+        <div className="hidden lg:flex items-center justify-center flex-1 max-w-md">
+          <img
+            src="/src/assets/img/image.png"
+            alt="Illustration"
+            className="w-full h-auto max-w-sm"
+          />
+        </div>
+        
       </div>
     </div>
   );
