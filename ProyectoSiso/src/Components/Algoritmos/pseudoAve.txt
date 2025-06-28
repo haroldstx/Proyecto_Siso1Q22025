@@ -1,0 +1,24 @@
+Inicio
+
+  Mostrar título: "Algoritmo del Avestruz: División"
+
+  Solicitar al usuario:
+    Ingresar dividendo (a)
+    Ingresar divisor (b)
+
+  Al presionar el botón "Ejecutar división":
+
+    Si b == 0:
+      // Aquí se aplica el algoritmo del avestruz
+      Mostrar resultado como "Resultado indefinido"
+      Mostrar estado: "División inválida ignorada (avestruz)"
+      Fin
+
+    Si no:
+      Calcular resultado = a / b
+      Mostrar resultado
+      Mostrar estado: "División realizada correctamente"
+
+Fin
+
+

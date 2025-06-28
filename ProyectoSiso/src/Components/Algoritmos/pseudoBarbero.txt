@@ -1,0 +1,48 @@
+INICIAR:
+  maxSillas ← valor inicial (por defecto 3)
+  clientesEsperando ← lista vacía
+  barberoOcupado ← falso
+  log ← lista vacía
+  clienteID ← 1
+
+FUNCIÓN agregarLog(mensaje):
+  Agrega mensaje al principio del log
+
+FUNCIÓN llegarCliente():
+  SI tamaño(clientesEsperando) >= maxSillas ENTONCES
+    agregarLog("Cliente clienteID llega y se va: sala llena.")
+  SINO
+    Agregar clienteID a clientesEsperando
+    agregarLog("Cliente clienteID llega y espera.")
+  clienteID ← clienteID + 1
+
+FUNCIÓN empezarCorte():
+  SI barberoOcupado ENTONCES
+    agregarLog("El barbero ya está atendiendo.")
+    SALIR
+  SI clientesEsperando está vacía ENTONCES
+    agregarLog("No hay clientes esperando.")
+    SALIR
+  clienteActual ← primer cliente de clientesEsperando
+  barberoOcupado ← verdadero
+  agregarLog("Barbero empieza a atender al cliente clienteActual.")
+  
+  INICIAR TEMPORIZADOR DE 5 SEGUNDOS:
+    barberoOcupado ← falso
+    Eliminar clienteActual de clientesEsperando
+    agregarLog("Barbero terminó con cliente clienteActual.")
+
+FUNCIÓN terminarAtencion():
+  CANCELAR TEMPORIZADOR SI EXISTE
+  SI barberoOcupado Y clientesEsperando no está vacío ENTONCES
+    clienteActual ← primer cliente de clientesEsperando
+    barberoOcupado ← falso
+    Eliminar clienteActual de clientesEsperando
+    agregarLog("Atención terminada manualmente para cliente clienteActual.")
+  SINO
+    agregarLog("No hay atención en curso para terminar.")
+
+FUNCIÓN cambiarMaxSillas(nuevoValor):
+  maxSillas ← nuevoValor
+
+

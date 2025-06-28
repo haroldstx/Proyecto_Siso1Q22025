@@ -1,0 +1,84 @@
+INICIO
+
+  variables:
+    disponibles = 10
+    procesos = [
+      { id: 'P1', max: 7, asignado: 0 },
+      { id: 'P2', max: 5, asignado: 0 },
+      { id: 'P3', max: 3, asignado: 0 }
+    ]
+    log = []
+
+  FUNCIÓN solicitar(pid, cantidad):
+    p = buscar proceso en procesos con id = pid
+    nuevoAsignado = p.asignado + cantidad
+
+    SI cantidad <= 0 ENTONCES
+      agregarLog("Solicitud inválida")
+      RETORNAR
+    FIN SI
+
+    SI nuevoAsignado > p.max ENTONCES
+      agregarLog("Solicitud excede máximo permitido")
+      RETORNAR
+    FIN SI
+
+    SI cantidad > disponibles ENTONCES
+      agregarLog("No hay suficientes recursos disponibles")
+      RETORNAR
+    FIN SI
+
+    // Simulación temporal de asignación
+    nuevosDisponibles = disponibles - cantidad
+    procesosSimulados = copia de procesos con asignado actualizado para pid
+
+    // Verificar estado seguro
+    SI verificarEstadoSeguro(nuevosDisponibles, procesosSimulados) ES VERDADERO ENTONCES
+      actualizar procesos con procesosSimulados
+      actualizar disponibles = nuevosDisponibles
+      agregarLog("Solicitud concedida")
+    SINO
+      agregarLog("Solicitud denegada por estado inseguro")
+    FIN SI
+  FIN FUNCIÓN
+
+  FUNCIÓN verificarEstadoSeguro(disponiblesTemp, procesosTemp):
+    disponibles = disponiblesTemp
+    finalizados = conjunto vacío
+
+    mientras (progreso = VERDADERO):
+      progreso = FALSO
+      para cada proceso p en procesosTemp:
+        SI p.id está en finalizados, CONTINUAR
+        necesidad = p.max - p.asignado
+        SI necesidad <= disponibles ENTONCES
+          disponibles = disponibles + p.asignado  // Liberar recursos simuladamente
+          agregar p.id a finalizados
+          progreso = VERDADERO
+        FIN SI
+      FIN PARA
+    FIN MIENTRAS
+
+    RETORNAR (tamaño de finalizados == cantidad de procesosTemp)
+  FIN FUNCIÓN
+
+  FUNCIÓN terminarProceso(pid):
+    p = buscar proceso en procesos con id = pid
+
+    SI p.asignado == 0 ENTONCES
+      agregarLog("Proceso no tiene recursos asignados para liberar")
+      RETORNAR
+    FIN SI
+
+    // Liberar recursos reales
+    actualizar p.asignado = 0 en procesos
+    disponibles = disponibles + p.asignado
+    agregarLog("Proceso terminó y liberó recursos")
+  FIN FUNCIÓN
+
+  FUNCIÓN agregarLog(mensaje):
+    insertar mensaje al inicio de log
+  FIN FUNCIÓN
+
+FIN
+

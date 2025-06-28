@@ -1,0 +1,60 @@
+INICIALIZAR:
+  DISPONIBLES ← [CPU, MEMORIA, IMPRESORAS]   // Recursos totales disponibles
+  PROCESOS ← lista de procesos, donde cada uno tiene:
+      - ID
+      - MAX ← [máx_CPU, máx_MEM, máx_IMP]
+      - ASIGNADO ← [0, 0, 0] inicialmente
+
+FUNCION solicitar(PROCESO_ID, SOLICITUD):
+  p ← buscar PROCESO con ID = PROCESO_ID
+  nuevo_asignado ← p.ASIGNADO + SOLICITUD
+
+  SI cualquier valor en SOLICITUD es negativo O no es entero:
+    rechazar con mensaje "Solicitud inválida"
+    RETORNAR
+
+  SI nuevo_asignado > p.MAX:
+    rechazar con mensaje "Excede su máximo permitido"
+    RETORNAR
+
+  SI SOLICITUD > DISPONIBLES:
+    rechazar con mensaje "No hay suficientes recursos"
+    RETORNAR
+
+  // Verificar si el estado sería seguro
+  DISPONIBLES_TEMP ← DISPONIBLES - SOLICITUD
+  PROCESOS_TEMP ← copiar PROCESOS con p.ASIGNADO ← nuevo_asignado
+
+  SI verificar_estado_seguro(DISPONIBLES_TEMP, PROCESOS_TEMP):
+    Aceptar solicitud:
+      - DISPONIBLES ← DISPONIBLES_TEMP
+      - p.ASIGNADO ← nuevo_asignado
+      - Registrar mensaje "Asignación exitosa"
+  SINO:
+    Rechazar con mensaje "Estado inseguro"
+
+FUNCION verificar_estado_seguro(DISPONIBLES_TEMP, PROCESOS_TEMP):
+  MARCAR todos los procesos como NO FINALIZADOS
+  RECURSOS ← copia de DISPONIBLES_TEMP
+
+  MIENTRAS exista proceso NO FINALIZADO que pueda finalizar:
+    PARA cada proceso p NO FINALIZADO:
+      NECESIDAD ← p.MAX - p.ASIGNADO
+      SI NECESIDAD ≤ RECURSOS:
+        MARCAR p como FINALIZADO
+        RECURSOS ← RECURSOS + p.ASIGNADO
+
+  SI todos los procesos están FINALIZADOS:
+    RETORNAR VERDADERO (estado seguro)
+  SINO:
+    RETORNAR FALSO (estado inseguro)
+
+FUNCION terminar_proceso(PROCESO_ID):
+  p ← buscar PROCESO con ID = PROCESO_ID
+  SI p.ASIGNADO == [0, 0, 0]:
+    Registrar "No tiene recursos asignados"
+    RETORNAR
+
+  DISPONIBLES ← DISPONIBLES + p.ASIGNADO
+  p.ASIGNADO ← [0, 0, 0]
+  Registrar "Proceso liberó sus recursos"

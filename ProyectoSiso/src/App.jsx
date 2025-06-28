@@ -4,9 +4,8 @@ import MainPage from './Components/MainPage';
 import CerrarVotaciones from './Components/CerrarVotaciones';
 import Votar from './Components/Votar';
 import Ganadores from './Components/Ganadores';
+import AlgoritmosPage from './Components/AlgoritmosPage';
 
-
-import AdminPage from './Components/AdminPage.jsx';
 
 function App() {
 
@@ -18,6 +17,7 @@ function App() {
         <Route path="/cerrar-votaciones" element={<CerrarVotaciones />} />
         <Route path="/votar" element={<Votar />} />
         <Route path="/ganadores" element={<Ganadores />} />
+       <Route path="/Algoritmos" element={<AlgoritmosPage />} />
       </Routes>
     </BrowserRouter>
   )
