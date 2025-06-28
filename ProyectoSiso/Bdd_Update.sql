@@ -149,10 +149,7 @@ CREATE TABLE `Partidos` (
 INSERT INTO `Partidos` (`Id`, `Nombre`) VALUES
 (1, 'LIBRE'),
 (2, 'Partido Liberal'),
-(3, 'Partido Nacional'),
-(4, 'Partido Anticorrupción'),
-(5, 'Partido Innovación y Unidad SD'),
-(6, 'Partido Demócrata Cristiano ');
+(3, 'Partido Nacional');
 
 -- --------------------------------------------------------
 
