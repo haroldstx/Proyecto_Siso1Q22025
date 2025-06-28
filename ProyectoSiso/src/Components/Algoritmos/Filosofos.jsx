@@ -55,7 +55,7 @@ const AlgoritmoFilosofosComelones = () => {
     <div>
         <h1 style={{fontSize:"30px"}}><strong>Problema de los Filosofos Comelones</strong></h1>
         <br></br>
-        <br></br>
+                <br></br>
        <p style={{fontSize:"16px"}}>
         En 1965, Dijkstra propuso y resolvió un problema de sincronización al que llamó el problema de
 los filósofos comelones. Desde ese momento, todos los que inventaban otra primitiva de sincronización 

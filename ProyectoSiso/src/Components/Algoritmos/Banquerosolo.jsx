@@ -90,6 +90,7 @@ const AlgoritmoBanqueroSolo = () => {
     <div>
 <h1 style={{fontSize:"30px"}}><strong>Algoritmo del Banquero para un solo Recurso</strong></h1>
 <br></br>
+        <br></br>
       <p style={{fontSize:"16px"}}>
         Se modela de la forma en que un banquero de una
         pequeña ciudad podría tratar con un grupo de clientes a los que ha otorgado líneas de crédito. Lo
