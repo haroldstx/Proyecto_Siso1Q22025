@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Sistema de Votación</title>
+</head>
+<body>
+    <h2>Inicio de Sesión</h2>
+
+    <form action="validar_login.php" method="POST">
+        <label>Número de Identidad:</label><br>
+        <input type="text" name="identidad" maxlength="13" required><br><br>
+
+        <label>Número de Teléfono (solo ciudadanos):</label><br>
+        <input type="text" name="telefono" maxlength="13"><br><br>
+
+        <label>Contraseña (solo admins):</label><br>
+        <input type="password" name="password"><br><br>
+
+        <button type="submit">Ingresar</button>
+    </form>
+</body>
+</html>
