@@ -17,42 +17,29 @@ const Login = () => {
         <form className="bg-white py-9 rounded shadow-md w-full max-w-sm">
 
           <div className="mb-4">
-            <label className="block mb-2 text-sm font-semibold text-gray-700">Email: </label>
+            <label className="block mb-2 text-sm font-semibold text-gray-700">Numero de Identidad </label>
             <input
               type="text"
               className="w-full px-3 py-2 border rounded"
-              placeholder="Enter your email"
+              placeholder="ejem: 0401-1999-99999"
             />
           </div>
 
           <div className="mb-9">
-            <label className="block mb-2 text-sm font-semibold text-gray-700">Password: </label>
+            <label className="block mb-2 text-sm font-semibold text-gray-700">Telefono: </label>
               <input
-                type="password"
+                type="text"
                 className="flex w-full px-3 py-2 border rounded"
-                placeholder="Enter your password"
-              />
-              <Eye className="text-gray-500 w-5 h-5" />   
+                placeholder=" ejem: +504 9999-9999"
+              />   
           </div>
-
-          <div className="flex justify-between items-center text-sm text-gray-500 mt-9">
-            <label className="flex items-center space-x-2 py-9">
-              <input type="checkbox" />
-              <span>Remember for 30 days</span>
-
-            </label>
-            <a href="#" className="text-sm hover:underline">
-              Forgot Password?
-            </a>
-          </div>
-
-          <button
+          <div className='mt-9 py-2 px-4'>
+            <button
             type="submit"
-            className="w-full bg-black text-white py-9 rounded-full font-semibold hover:bg-gray-800 transition"
-          >
+            className='w-full bg-black text-white rounded-full font-semibold hover:bg-gray-800 transition'>
             Log In
           </button>
-
+          </div>
         </form>
       </div>
 
