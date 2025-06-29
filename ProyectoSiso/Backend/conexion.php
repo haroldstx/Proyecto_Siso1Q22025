@@ -2,7 +2,7 @@
 $host = "localhost";
 $usuario = "vote";
 $contrasena = "admin2025";
-$basedatos = "votacion";
+$basedatos = "votacion2025";
 
 $conn = new mysqli($host, $usuario, $contrasena, $basedatos);
 
