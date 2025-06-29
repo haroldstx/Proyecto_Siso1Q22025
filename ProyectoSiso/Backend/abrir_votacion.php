@@ -1,40 +1,57 @@
 <?php
-require 'db.php';
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+require 'conexion.php';
 
 // Verificar si ya hay una votación abierta
-$abierta = $pdo->query("SELECT * FROM Votaciones WHERE Abierto = 1 LIMIT 1")->fetch();
+$abierta = $conn->query("SELECT * FROM Votaciones WHERE Abierto = 1 LIMIT 1");
 
-if ($abierta) {
-    echo "<h2>⚠️ Ya hay una votación abierta.</h2>";
-    echo "<p>No se puede abrir otra hasta cerrarla.</p>";
-    echo "<a href='cerrar_votacion.php'>Cerrar votación actual</a>";
+if ($abierta && $abierta->num_rows > 0) {
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Ya hay una votación abierta. No se puede abrir otra hasta cerrarla.'
+    ]);
     exit;
 }
 
+$conn->begin_transaction();
+
 try {
-    // Comenzar transacción
-    $pdo->beginTransaction();
+    // Reiniciar votos
+    $conn->query("UPDATE Presidente SET Votos = 0");
+    $conn->query("UPDATE Diputados SET Votos = 0");
+    $conn->query("UPDATE Alcalde SET Votos = 0");
 
-    // Reiniciar votos de presidentes, diputados y alcaldes
-    $pdo->exec("UPDATE Presidente SET Votos = 0");
-    $pdo->exec("UPDATE Diputados SET Votos = 0");
-    $pdo->exec("UPDATE Alcalde SET Votos = 0");
-
-    // Reiniciar YaVoto de todos los usuarios
-    $pdo->exec("UPDATE Usuarios SET YaVoto = 0");
+    // Reiniciar estado de votación de usuarios
+    $conn->query("UPDATE Usuarios SET YaVoto = 0");
 
     // Insertar nueva votación
-    $stmt = $pdo->prepare("INSERT INTO Votaciones (Inicio, Abierto) VALUES (NOW(), 1)");
+    $stmt = $conn->prepare("INSERT INTO Votaciones (Inicio, Abierto) VALUES (NOW(), 1)");
     $stmt->execute();
 
-    $pdo->commit();
+    $newId = $conn->insert_id;
+    $conn->commit();
 
-    echo "<h2>✅ Nueva votación abierta correctamente</h2>";
-    echo "<p>Todos los votos han sido reiniciados.</p>";
-    echo "<a href='index.php'>Ir a votar</a>";
+    echo json_encode([
+        'status' => 'success',
+        'message' => 'Nueva votación abierta correctamente.',
+        'votacionId' => $newId
+    ]);
 } catch (Exception $e) {
-    $pdo->rollBack();
-    echo "<h2>❌ Error al abrir la votación:</h2>";
-    echo "<pre>" . $e->getMessage() . "</pre>";
+    $conn->rollback();
+    http_response_code(500);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Error al abrir la votación.',
+        'error' => $e->getMessage()
+    ]);
 }
 ?>

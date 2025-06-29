@@ -9,7 +9,6 @@ const CerrarVotaciones = () => {
     const [actionType, setActionType] = useState(''); // 'abrir' o 'cerrar'
     const navigate = useNavigate();
 
-    // Cargar datos del usuario desde localStorage
     useEffect(() => {
         try {
             const userData = localStorage.getItem('usuario');
@@ -39,16 +38,31 @@ const CerrarVotaciones = () => {
         setConfirmModal(false);
 
         try {
-            // Simular llamada a la API
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
+            let url = '';
             if (actionType === 'cerrar') {
-                setVotacionesAbiertas(false);
+                url = 'http://localhost:8000/Backend/cerrar_votacion.php';
+            } else if (actionType === 'abrir') {
+                url = 'http://localhost:8000/Backend/abrir_votacion.php';
+            }
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const result = await response.json();
+            console.log('Respuesta del servidor:', result);
+
+            if (result.status === 'success') {
+                setVotacionesAbiertas(actionType === 'abrir');
             } else {
-                setVotacionesAbiertas(true);
+                alert('Error: ' + (result.message || 'Error desconocido'));
             }
         } catch (error) {
             console.error('Error al cambiar estado de votaciones:', error);
+            alert('Error al comunicarse con el servidor.');
         } finally {
             setLoading(false);
         }
