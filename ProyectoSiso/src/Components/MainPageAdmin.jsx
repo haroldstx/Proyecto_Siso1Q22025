@@ -93,7 +93,7 @@ const MainPageAdmin = () => {
               className="block p-6 rounded-lg border-2 border-red-300 bg-red-50 text-red-700 transition-all transform hover:scale-105 hover:border-red-500 hover:bg-red-100"
             >
               <div className="text-center">
-                <div className="text-4xl mb-3">🔒</div>
+                <div className="text-7xl mb-3">🔒</div>
                 <h3 className="text-xl font-semibold mb-2">Cerrar Votaciones</h3>
                 <p className="text-sm">
                   Finalizar el proceso de votación y cerrar urnas
@@ -102,12 +102,12 @@ const MainPageAdmin = () => {
             </Link>
 
             {/* Consultar Resultados */}
-            <Link
+            <Link 
               to="/ganadores"
               className="block p-6 rounded-lg border-2 border-purple-300 bg-purple-50 text-purple-700 transition-all transform hover:scale-105 hover:border-purple-500 hover:bg-purple-100"
             >
               <div className="text-center">
-                <div className="text-4xl mb-3">📊</div>
+                <div className="text-7xl mb-3">📊</div>
                 <h3 className="text-xl font-semibold mb-2">Resultados</h3>
                 <p className="text-sm">
                   Ver resultados en tiempo real y estadísticas
@@ -116,17 +116,17 @@ const MainPageAdmin = () => {
             </Link>
 
             {/* Supervisión General */}
-            <div className="p-6 rounded-lg border-2 border-gray-300 bg-gray-50 text-gray-600">
+            <Link to="/Algoritmos">
+            <div className="p-6 rounded-lg border-2 border-green-300 bg-gray-50 text-green-600 hover:border-green-500 hover:bg-green-100 transition-all transform hover:scale-105">
               <div className="text-center">
-                <div className="text-4xl mb-3">📈</div>
+                 <img src="/src/assets/img/play.png" alt="Algoritmos" className="mx-auto mb-2" />
                 <h3 className="text-xl font-semibold mb-2">Estadísticas</h3>
                 <p className="text-sm">
                   Monitoreo y análisis del proceso electoral
                 </p>
-                <span className="text-xs text-gray-500 mt-2 block">(Próximamente)</span>
               </div>
             </div>
-
+            </Link>
           </div>
 
           {/* Panel de información administrativa */}
@@ -154,7 +154,6 @@ const MainPageAdmin = () => {
               <ul className="text-sm text-blue-700 space-y-2">
                 <li>• Control total sobre el proceso electoral</li>
                 <li>• Acceso a estadísticas en tiempo real</li>
-                <li>• Gestión de usuarios y permisos</li>
                 <li>• Supervisión de la integridad del sistema</li>
               </ul>
             </div>

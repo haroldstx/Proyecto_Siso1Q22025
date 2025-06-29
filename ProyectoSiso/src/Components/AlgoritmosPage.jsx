@@ -22,6 +22,10 @@ function AlgoritmosPage() {
   const [selectedKey, setSelectedKey] = useState('Avestruz');
 
   const handleMenuClick = (e) => {
+    if (e.key === 'salir') {
+      navigate(-1); 
+      return;
+    }
     setSelectedKey(e.key);
   };
 
@@ -45,8 +49,6 @@ function AlgoritmosPage() {
         case 'Barbero':
         return <AlgoritmoBarberoDurmiente></AlgoritmoBarberoDurmiente>
         ;
-        case 'salir':
-          return navigate("/") ;
       default:
         return <p>Selecciona una opción del menú</p>;
     }

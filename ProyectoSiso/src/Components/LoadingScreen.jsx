@@ -6,6 +6,7 @@ import React from 'react';
  * @param {string} props.message - Mensaje a mostrar durante la carga
  * @returns {React.ReactNode} - Componente de carga
  */
+
 const LoadingScreen = ({ message = "Cargando..." }) => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">

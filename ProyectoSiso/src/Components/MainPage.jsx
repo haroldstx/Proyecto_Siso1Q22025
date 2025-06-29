@@ -98,7 +98,7 @@ const MainPage = () => {
               onClick={hasVoted ? (e) => e.preventDefault() : undefined}
             >
               <div className="text-center">
-                <div className="text-3xl mb-3">🗳️</div>
+                <div className="text-7xl mb-3">🗳️</div>
                 <h3 className="text-xl font-semibold mb-2">Votar</h3>
                 <p className="text-sm">
                   {hasVoted 
@@ -114,13 +114,29 @@ const MainPage = () => {
               className="block p-6 rounded-lg border-2 border-purple-300 bg-purple-50 text-purple-700 transition-all transform hover:scale-105 hover:border-purple-500 hover:bg-purple-100"
             >
               <div className="text-center">
-                <div className="text-3xl mb-3">🏆</div>
+                <div className="text-7xl mb-3">🏆</div>
                 <h3 className="text-xl font-semibold mb-2">Resultados</h3>
                 <p className="text-sm">
                   Consulta los resultados de las votaciones
                 </p>
               </div>
             </Link>
+
+              <Link
+              to="/Algoritmos"
+              className="block-w p-6 rounded-lg border-2 border-red-300 bg-red-50 text-red-700 transition-all transform hover:scale-105 hover:border-red-500 hover:bg-red-100"
+            >
+              <div className="text-center">
+                <div className="text-3xl mb-3">
+                <img src="/src/assets/img/play.png" alt="Algoritmos" className="mx-auto mb-2" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Algoritmos</h3>
+                <p className="text-sm">
+                  Consulta los algoritmos utilizados en las votaciones
+                </p>
+              </div>
+            </Link>
+
           </div>
 
           {/* Información adicional */}
