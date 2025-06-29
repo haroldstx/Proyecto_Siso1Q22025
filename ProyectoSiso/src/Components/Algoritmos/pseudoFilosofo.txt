@@ -1,0 +1,45 @@
+INICIO
+
+CONSTANTE N ← número de filósofos
+
+ARREGLO ESTADOS[N] ← 'Pensando' para cada filósofo
+ARREGLO TENEDORES[N] ← false (todos los tenedores están libres)
+
+FUNCION izquierda(i):
+    RETORNAR i
+
+FUNCION derecha(i):
+    RETORNAR (i + 1) MOD N
+
+FUNCION intentar_comer(i):
+    t_izq ← izquierda(i)
+    t_der ← derecha(i)
+
+    SI TENEDORES[t_izq] == false Y TENEDORES[t_der] == false ENTONCES
+        TENEDORES[t_izq] ← true
+        TENEDORES[t_der] ← true
+        ESTADOS[i] ← 'Comiendo'
+        MOSTRAR mensaje: "Filósofo i comienza a comer"
+    SINO
+        MOSTRAR mensaje: "Filósofo i no puede comer (tenedor ocupado)"
+
+FUNCION terminar_de_comer(i):
+    t_izq ← izquierda(i)
+    t_der ← derecha(i)
+
+    TENEDORES[t_izq] ← false
+    TENEDORES[t_der] ← false
+    ESTADOS[i] ← 'Pensando'
+    MOSTRAR mensaje: "Filósofo i terminó de comer y liberó los tenedores"
+
+PARA i DESDE 0 HASTA N-1 HACER:
+    INICIALIZAR ESTADOS[i] ← 'Pensando'
+    INICIALIZAR TENEDORES[i] ← false
+
+// INTERFAZ:
+- Cada filósofo puede presionar:
+    → BOTÓN "Comer": ejecuta intentar_comer(i)
+    → BOTÓN "Terminar": ejecuta terminar_de_comer(i)
+
+FIN
+
