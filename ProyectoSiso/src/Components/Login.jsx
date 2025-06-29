@@ -135,18 +135,22 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gray-200 flex items-center justify-center px-4">
-      <div className="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-center gap-8">
+      {/* Fondo opcional, puedes descomentar la siguiente línea si quieres usar una imagen de
+    //style={{ backgroundImage: 'url(/src/assets/img/hn.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+      */}
+    <div className="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-center gap-8">
         
         {/* Login Form */}
         <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
           {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <img src="/src/assets/img/votacion.png" alt="Logo" className="h-16 w-16" />
+          <div className="flex justify-center mb-1 space-x-4 items-center">
+            <img src="/src/assets/img/votacion.png" alt="Logo" className="h-18 w-18" />
+            <img src="/src/assets/img/unitec.png" alt="Logo" className="h-40 w-70" />
           </div>
           
           {/* Title */}
           <h2 className="text-2xl font-bold text-center mb-2 text-gray-800">
-            Bienvenido al Centro de Votaciones De Honduras
+            Bienvenido al Centro de Votaciones De Honduras (Unitec)
           </h2>
           <p className="text-center text-gray-500 mb-8">Por favor ingresa tus datos</p>
 
@@ -160,7 +164,7 @@ const Login = () => {
 
             <div>
               <label className="block mb-2 text-sm font-semibold text-gray-700">
-                Número de Identidad
+                Número de Identidad:
               </label>
               <input
                 type="text"
@@ -180,7 +184,7 @@ const Login = () => {
 
             <div>
               <label className="block mb-2 text-sm font-semibold text-gray-700">
-                Teléfono
+                Teléfono:
               </label>
               <input
                 type="text"

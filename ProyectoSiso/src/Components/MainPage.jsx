@@ -35,6 +35,7 @@ const MainPage = () => {
 
   if (loading) {
     return (
+
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mx-auto mb-4"></div>
@@ -47,8 +48,16 @@ const MainPage = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header con información del usuario */}
+      {/* Div para colocar 3 imagenes representaticvas en la cabecera de los partidos politicos*/}
+      
+
       <div className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+        <div className="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div className="flex justify-center mb-1 pl-5 space-x-4 ">
+              <img src="/src/assets/img/nacional.png" alt="Partido 1" className="h-11 w-20" />
+              <img src="/src/assets/img/Liberal.png" alt="Partido 2" className="h-11 w-20" />
+              <img src="/src/assets/img/libre.png" alt="Partido 3" className="h-11 w-20" />
+          </div>
           <div>
             <h2 className="text-lg font-semibold text-gray-800">
               Portal de Votaciones - Ciudadano

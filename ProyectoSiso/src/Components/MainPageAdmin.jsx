@@ -53,6 +53,11 @@ const MainPageAdmin = () => {
       {/* Header con información del administrador */}
       <div className="bg-blue-600 text-white shadow-lg">
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center space-x-4">
+            <img src="/src/assets/img/nacional.png" alt="Partido 1" className="h-11 w-20" />
+            <img src="/src/assets/img/Liberal.png" alt="Partido 2" className="h-11 w-20" />
+            <img src="/src/assets/img/libre.png" alt="Partido 3" className="h-11 w-20" />
+          </div>
           <div>
             <h2 className="text-xl font-bold">
               Panel de Administración - Sistema de Votaciones
@@ -120,9 +125,9 @@ const MainPageAdmin = () => {
             <div className="p-6 rounded-lg border-2 border-green-300 bg-gray-50 text-green-600 hover:border-green-500 hover:bg-green-100 transition-all transform hover:scale-105">
               <div className="text-center">
                  <img src="/src/assets/img/play.png" alt="Algoritmos" className="mx-auto mb-2" />
-                <h3 className="text-xl font-semibold mb-2">Estadísticas</h3>
+                <h3 className="text-xl font-semibold mb-2">Algoritmos</h3>
                 <p className="text-sm">
-                  Monitoreo y análisis del proceso electoral
+                  Algoritmos de control y supervisión del sistema electoral
                 </p>
               </div>
             </div>
