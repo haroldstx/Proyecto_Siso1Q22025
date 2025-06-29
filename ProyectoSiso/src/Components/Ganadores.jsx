@@ -41,7 +41,7 @@ const Ganadores = () => {
   useEffect(() => {
     const fetchResultados = async () => {
       try {
-        const response = await fetch('http://localhost:8000/Backend/resultados.php');
+        const response = await fetch('Backend/resultados.php');
         const data = await response.json();
         
         if (data.success) {
