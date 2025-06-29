@@ -51,7 +51,7 @@ const Login = () => {
       console.log('Enviando petición a:', '/Backend/test_conexion.php');
 
       // Primero probamos la conexión y validación
-      const response = await fetch('/Backend/test_conexion.php', {
+      const response = await fetch('http://localhost:8000/Backend/test_conexion.php', {
         method: 'POST',
         body: formDataToSend,
         headers: {
