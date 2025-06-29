@@ -72,7 +72,7 @@ try {
         
         // Consulta SQL para verificar si el usuario existe en la base de datos
         // Buscamos por identidad limpia (sin guiones) y teléfono limpio
-        $query = "SELECT DNI, Telefono FROM Usuarios WHERE REPLACE(DNI, '-', '') = ? AND REPLACE(Telefono, ' ', '') = REPLACE(?, ' ', '')";
+        $query = "SELECT DNI, Telefono, Rol, YaVoto FROM Usuarios WHERE REPLACE(DNI, '-', '') = ? AND REPLACE(Telefono, ' ', '') = REPLACE(?, ' ', '')";
         $stmt = $conn->prepare($query);
         
         if (!$stmt) {
@@ -91,6 +91,9 @@ try {
         $user = $result->fetch_assoc();
         $stmt->close();
         
+        // Determinar tipo de usuario basado en el rol
+        $tipoUsuario = ($user['Rol'] == 1) ? 'admin' : 'ciudadano';
+        
         // Si todo está bien, responder con éxito
         echo json_encode([
             'success' => true,
@@ -98,6 +101,9 @@ try {
             'data' => [
                 'identidad' => $identidad,
                 'telefono' => $telefono,
+                'rol' => (int)$user['Rol'], // 0 = ciudadano, 1 = admin
+                'yavoto' => (int)$user['YaVoto'], // 0 = no ha votado, 1 = ya votó
+                'tipoUsuario' => $tipoUsuario,
                 'authenticated' => true
             ]
         ]);

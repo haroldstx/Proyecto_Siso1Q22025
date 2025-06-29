@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LoadingScreen from './LoadingScreen';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -7,6 +8,7 @@ const Login = () => {
     telefono: ''
   });
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('Validando credenciales...');
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({
@@ -44,6 +46,7 @@ const Login = () => {
       const formDataToSend = new FormData();
       formDataToSend.append('DNI', formData.identidad);
       formDataToSend.append('telefono', formData.telefono);
+      formDataToSend.append('rol', '0'); // Asumimos rol ciudadano (0)
 
       console.log('Enviando petición a:', '/Backend/test_conexion.php');
 
@@ -74,8 +77,20 @@ const Login = () => {
           yavoto: data.data.yavoto,
         }));
         
-        // Redirigir a la página principal
-        navigate('/mainpage');
+        // Redirigir segun si el usuario es 0 o 1
+        if (data.data.rol === 0) {
+          // Cambiar mensaje y mostrar loading por 2 segundos antes de redirigir
+          setLoadingMessage('¡Bienvenido! Redirigiendo al portal de ciudadanos...');
+          setTimeout(() => {
+            navigate('/mainpage');
+          }, 2000);
+        } else if (data.data.rol === 1) {
+          // Cambiar mensaje y mostrar loading por 2 segundos antes de redirigir
+          setLoadingMessage('¡Bienvenido Administrador! Accediendo al panel de control...');
+          setTimeout(() => {
+            navigate('/mainpage-admin');
+          }, 2000);
+        }
       } else {
         // Manejar errores específicos de formato
         const errorMessage = data.message || 'Error en la validación';
@@ -105,9 +120,18 @@ const Login = () => {
         setError(`${error.message}`);
       }
     } finally {
-      setLoading(false);
+      // Solo resetear loading si no estamos en proceso de redirección exitosa
+      if (!localStorage.getItem('usuario')) {
+        setLoading(false);
+        setLoadingMessage('Error al validar credenciales - Inténtalo de nuevo');
+      }
     }
   };
+
+  // Mostrar pantalla de carga cuando está validando credenciales
+  if (loading) {
+    return <LoadingScreen message={loadingMessage} />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-200 flex items-center justify-center px-4">
