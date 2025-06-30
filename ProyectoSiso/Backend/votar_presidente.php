@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db.php';
+require 'conexion.php';
 
 if (!isset($_SESSION['dni'])) {
     header("Location: index.php");
