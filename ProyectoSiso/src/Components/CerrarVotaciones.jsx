@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const CerrarVotaciones = () => {
-    const [votacionesAbiertas, setVotacionesAbiertas] = useState(true);
+    const [votacionesAbiertas, setVotacionesAbiertas] = useState(false);
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState(null);
     const [confirmModal, setConfirmModal] = useState(false);
-    const [actionType, setActionType] = useState(''); // 'abrir' o 'cerrar'
+    const [actionType, setActionType] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
 
-    // Cargar datos del usuario desde localStorage
     useEffect(() => {
         try {
             const userData = localStorage.getItem('usuario');
@@ -29,6 +29,35 @@ const CerrarVotaciones = () => {
         }
     }, [navigate]);
 
+   useEffect(() => {
+  const obtenerEstadoVotacion = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/Backend/estado_votacion.php');
+      const text = await response.text(); // leer como texto plano
+      const abierto = text.trim() === 'true'; // convertir a boolean
+      setVotacionesAbiertas(abierto);
+    } catch (error) {
+      console.error('Error al obtener estado de votación:', error);
+    }
+  };
+
+  obtenerEstadoVotacion();
+
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === 'visible') {
+      obtenerEstadoVotacion();
+    }
+  };
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+
+  const interval = setInterval(obtenerEstadoVotacion, 10000);
+
+  return () => {
+    clearInterval(interval);
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+  };
+}, []);
+
     const handleToggleVotaciones = (action) => {
         setActionType(action);
         setConfirmModal(true);
@@ -39,16 +68,31 @@ const CerrarVotaciones = () => {
         setConfirmModal(false);
 
         try {
-            // Simular llamada a la API
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
+            let url = '';
             if (actionType === 'cerrar') {
-                setVotacionesAbiertas(false);
+                url = 'http://localhost:8000/Backend/cerrar_votacion.php';
+            } else if (actionType === 'abrir') {
+                url = 'http://localhost:8000/Backend/abrir_votacion.php';
+            }
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const result = await response.json();
+            console.log('Respuesta del servidor:', result);
+
+            if (result.status === 'success') {
+                setVotacionesAbiertas(actionType === 'abrir');
             } else {
-                setVotacionesAbiertas(true);
+                alert('Error: ' + (result.message || 'Error desconocido'));
             }
         } catch (error) {
             console.error('Error al cambiar estado de votaciones:', error);
+            alert('Error al comunicarse con el servidor.');
         } finally {
             setLoading(false);
         }
@@ -102,16 +146,10 @@ const CerrarVotaciones = () => {
                         )}
                     </div>
                     <div className="flex space-x-4">
-                        <button
-                            onClick={volverAlPanel}
-                            className="px-4 py-2 text-sm bg-blue-700 hover:bg-blue-800 rounded transition-colors"
-                        >
+                        <button onClick={volverAlPanel} className="px-4 py-2 text-sm bg-blue-700 hover:bg-blue-800 rounded transition-colors">
                             Volver al Panel
                         </button>
-                        <button
-                            onClick={logout}
-                            className="px-4 py-2 text-sm bg-red-600 hover:bg-red-700 rounded transition-colors"
-                        >
+                        <button onClick={logout} className="px-4 py-2 text-sm bg-red-600 hover:bg-red-700 rounded transition-colors">
                             Cerrar Sesión
                         </button>
                     </div>
@@ -121,11 +159,10 @@ const CerrarVotaciones = () => {
             {/* Contenido principal */}
             <div className="max-w-4xl mx-auto px-4 py-8">
                 <div className="bg-white rounded-lg shadow-lg p-8">
-                    {/* Estado actual */}
                     <div className="text-center mb-8">
                         <div className={`inline-flex items-center px-6 py-3 rounded-full text-lg font-semibold mb-4 ${
-                            votacionesAbiertas 
-                                ? 'bg-green-100 text-green-800 border-2 border-green-300' 
+                            votacionesAbiertas
+                                ? 'bg-green-100 text-green-800 border-2 border-green-300'
                                 : 'bg-red-100 text-red-800 border-2 border-red-300'
                         }`}>
                             <div className={`w-3 h-3 rounded-full mr-3 ${
@@ -133,7 +170,7 @@ const CerrarVotaciones = () => {
                             }`}></div>
                             Estado: {votacionesAbiertas ? 'VOTACIONES ABIERTAS' : 'VOTACIONES CERRADAS'}
                         </div>
-                        
+
                         <h1 className="text-3xl font-bold text-gray-800 mb-4">
                             Control del Proceso Electoral
                         </h1>
@@ -144,13 +181,10 @@ const CerrarVotaciones = () => {
 
                     {/* Panel de control */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Cerrar Votaciones */}
                         <div className="bg-red-50 border-2 border-red-200 rounded-lg p-6">
                             <div className="text-center">
                                 <div className="text-5xl mb-4">🔒</div>
-                                <h3 className="text-xl font-bold text-red-800 mb-3">
-                                    Cerrar Votaciones
-                                </h3>
+                                <h3 className="text-xl font-bold text-red-800 mb-3">Cerrar Votaciones</h3>
                                 <p className="text-sm text-red-600 mb-4">
                                     Finaliza el proceso de votación. Una vez cerradas, no se podrán registrar más votos.
                                 </p>
@@ -168,13 +202,10 @@ const CerrarVotaciones = () => {
                             </div>
                         </div>
 
-                        {/* Abrir Votaciones */}
                         <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6">
                             <div className="text-center">
                                 <div className="text-5xl mb-4">🗳️</div>
-                                <h3 className="text-xl font-bold text-green-800 mb-3">
-                                    Abrir Votaciones
-                                </h3>
+                                <h3 className="text-xl font-bold text-green-800 mb-3">Abrir Votaciones</h3>
                                 <p className="text-sm text-green-600 mb-4">
                                     Inicia o reactiva el proceso de votación. Los ciudadanos podrán ejercer su voto.
                                 </p>
@@ -193,39 +224,28 @@ const CerrarVotaciones = () => {
                         </div>
                     </div>
 
-                    {/* Información del sistema */}
                     <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
                         <h4 className="font-semibold text-blue-800 mb-4 flex items-center">
-                            <span className="text-blue-600 mr-2">ℹ️</span>
-                            Información del Sistema
+                            <span className="text-blue-600 mr-2">ℹ️</span> Información del Sistema
                         </h4>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                            <div>
-                                <span className="font-semibold text-blue-700">Estado:</span>
+                            <div><span className="font-semibold text-blue-700">Estado:</span>
                                 <span className={`ml-2 ${votacionesAbiertas ? 'text-green-600' : 'text-red-600'}`}>
                                     {votacionesAbiertas ? 'Activo' : 'Inactivo'}
                                 </span>
                             </div>
-                            <div>
-                                <span className="font-semibold text-blue-700">Última modificación:</span>
-                                <span className="ml-2 text-blue-600">
-                                    {new Date().toLocaleString()}
-                                </span>
+                            <div><span className="font-semibold text-blue-700">Última modificación:</span>
+                                <span className="ml-2 text-blue-600">{new Date().toLocaleString()}</span>
                             </div>
-                            <div>
-                                <span className="font-semibold text-blue-700">Administrador:</span>
-                                <span className="ml-2 text-blue-600">
-                                    {user?.identidad || 'No definido'}
-                                </span>
+                            <div><span className="font-semibold text-blue-700">Administrador:</span>
+                                <span className="ml-2 text-blue-600">{user?.identidad || 'No definido'}</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Advertencias */}
                     <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                         <h4 className="font-semibold text-yellow-800 mb-2 flex items-center">
-                            <span className="text-yellow-600 mr-2">⚠️</span>
-                            Advertencias Importantes
+                            <span className="text-yellow-600 mr-2">⚠️</span> Advertencias Importantes
                         </h4>
                         <ul className="text-sm text-yellow-700 space-y-1">
                             <li>• Una vez cerradas las votaciones, los resultados se consideran definitivos</li>
@@ -237,7 +257,6 @@ const CerrarVotaciones = () => {
                 </div>
             </div>
 
-            {/* Modal de confirmación */}
             {confirmModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
@@ -250,23 +269,16 @@ const CerrarVotaciones = () => {
                             </h3>
                             <p className="text-gray-600 mb-6">
                                 ¿Estás seguro de que deseas {actionType === 'cerrar' ? 'cerrar' : 'abrir'} las votaciones?
-                                {actionType === 'cerrar' && ' Esta acción no se puede deshacer fácilmente.'}
                             </p>
                             <div className="flex space-x-4">
-                                <button
-                                    onClick={() => setConfirmModal(false)}
-                                    className="flex-1 py-2 px-4 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
-                                >
+                                <button onClick={() => setConfirmModal(false)} className="flex-1 py-2 px-4 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors">
                                     Cancelar
                                 </button>
-                                <button
-                                    onClick={confirmarAccion}
-                                    className={`flex-1 py-2 px-4 rounded-lg text-white font-semibold transition-colors ${
-                                        actionType === 'cerrar'
-                                            ? 'bg-red-600 hover:bg-red-700'
-                                            : 'bg-green-600 hover:bg-green-700'
-                                    }`}
-                                >
+                                <button onClick={confirmarAccion} className={`flex-1 py-2 px-4 rounded-lg text-white font-semibold transition-colors ${
+                                    actionType === 'cerrar'
+                                        ? 'bg-red-600 hover:bg-red-700'
+                                        : 'bg-green-600 hover:bg-green-700'
+                                }`}>
                                     {actionType === 'cerrar' ? 'Cerrar' : 'Abrir'}
                                 </button>
                             </div>
