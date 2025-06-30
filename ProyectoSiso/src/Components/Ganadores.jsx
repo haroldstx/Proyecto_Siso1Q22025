@@ -157,7 +157,7 @@ const Ganadores = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <div className="bg-green-600 text-white shadow-lg">
+      <div className="bg-purple-600 text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold">
