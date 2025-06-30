@@ -58,38 +58,41 @@ function VotarAlcalde() {
     setAlcaldeSeleccionado(id);
   };
 
-  const enviarVotos = () => {
-    if (!alcaldeSeleccionado || !idPresidente || !idsDiputados || !user) {
-      message.error('Faltan datos para registrar el voto');
-      return;
-    }
+const enviarVotos = () => {
+  if (!alcaldeSeleccionado || !idPresidente || !idsDiputados || !user) {
+    message.error('Faltan datos para registrar el voto');
+    return;
+  }
 
-    const payload = {
-      dni: user.identidad,
-      id_presidente: idPresidente,
-      id_alcalde: alcaldeSeleccionado,
-      ids_diputados: idsDiputados
-    };
-
-    fetch('/Backend/enviar_votos.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          message.success('¡Voto registrado exitosamente!');
-          navigate('/mainpage');
-        } else {
-          message.error(data.message || 'Error al registrar voto');
-        }
-      })
-      .catch(err => {
-        console.error('Error al enviar votos:', err);
-        message.error('Error del servidor al enviar votos');
-      });
+  const payload = {
+    dni: user.identidad,
+    id_presidente: idPresidente,
+    id_alcalde: alcaldeSeleccionado,
+    ids_diputados: idsDiputados
   };
+
+  fetch('Backend/enviar_votos.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        const updatedUser = { ...user, yavoto: 1 };
+        localStorage.setItem('usuario', JSON.stringify(updatedUser));
+
+        message.success('¡Voto registrado exitosamente!');
+        navigate('/mainpage');
+      } else {
+        message.error(data.message || 'Error al registrar voto');
+      }
+    })
+    .catch(err => {
+      console.error('Error al enviar votos:', err);
+      message.error('Error del servidor al enviar votos');
+    });
+};
 
   return (
     <div className=''>

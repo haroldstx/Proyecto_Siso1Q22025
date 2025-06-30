@@ -48,7 +48,7 @@ const Login = () => {
       formDataToSend.append('telefono', formData.telefono);
       formDataToSend.append('rol', '0'); // Asumimos rol ciudadano (0)
 
-      console.log('Enviando petición a:', 'Backend/test_conexion.php');
+      console.log('Enviando petición a:','Backend/test_conexion.php');
 
       // Primero probamos la conexión y validación
       const response = await fetch('Backend/test_conexion.php', {
