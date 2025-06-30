@@ -16,7 +16,8 @@ export default defineConfig({
       '/Backend': {
         target: 'http://localhost:8000',
         changeOrigin: true,
-        secure: false
+        secure: false,
+        rewrite: (path) => path.replace(/^\/Backend/, '')
       }
     }
   }
