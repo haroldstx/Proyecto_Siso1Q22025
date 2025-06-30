@@ -71,13 +71,13 @@ try {
         }
     }
     
-    // Obtener resultados de Diputados (TOP 10)
+    // Obtener resultados de Diputados (TOP 24)
     $query_diputados = "
         SELECT d.Id, d.Nombre, pt.Nombre as Partido, d.Votos 
         FROM Diputados d 
         JOIN Partidos pt ON d.Partido = pt.Id 
         ORDER BY d.Votos DESC 
-        LIMIT 10
+        LIMIT 24
     ";
     $result_diputados = $conn->query($query_diputados);
     

@@ -41,7 +41,7 @@ const Ganadores = () => {
   useEffect(() => {
     const fetchResultados = async () => {
       try {
-        const response = await fetch('Backend/resultados.php');
+        const response = await fetch('/Backend/resultados.php');
         const data = await response.json();
         
         if (data.success) {
@@ -271,7 +271,7 @@ const Ganadores = () => {
                   : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
               }`}
             >
-              👥 Diputados (TOP 10)
+              👥 Diputados (Todos los candidatos)
             </button>
           </div>
 
@@ -455,27 +455,41 @@ const Ganadores = () => {
                 {activeTab === 'diputados' && (
                   <div>
                     <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-                      Top 10 Diputados
+                      Ranking Completo de Diputados (23 Candidatos)
                     </h3>
                     
+                    <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+                      <div className="flex">
+                        <div className="ml-3">
+                          <p className="text-sm text-blue-700">
+                            <strong>Información:</strong> Se muestran todos los candidatos a diputados ordenados por número de votos. 
+                            Los primeros 23 con más votos serán elegidos para el Congreso Nacional.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
                     {/* Gráfica de barras */}
-                    <div className="mb-8">
-                      <ResponsiveContainer width="100%" height={500}>
-                        <BarChart data={prepareChartData(resultados.diputados, 'diputados')}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis 
-                            dataKey="shortName" 
-                            angle={-45}
-                            textAnchor="end"
-                            height={120}
-                            fontSize={10}
-                          />
-                          <YAxis />
-                          <Tooltip content={<CustomTooltip />} />
-                          <Legend />
-                          <Bar dataKey="votos" name="Votos" />
-                        </BarChart>
-                      </ResponsiveContainer>
+                    <div className="mb-8 overflow-x-auto">
+                      <div style={{ minWidth: '1200px', width: '100%' }}>
+                        <ResponsiveContainer width="100%" height={500}>
+                          <BarChart data={prepareChartData(resultados.diputados, 'diputados')}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis 
+                              dataKey="shortName" 
+                              angle={-45}
+                              textAnchor="end"
+                              height={120}
+                              fontSize={10}
+                              interval={0}
+                            />
+                            <YAxis />
+                            <Tooltip content={<CustomTooltip />} />
+                            <Legend />
+                            <Bar dataKey="votos" name="Votos" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
                     </div>
 
                     {/* Tabla de resultados */}
@@ -499,24 +513,40 @@ const Ganadores = () => {
                         </thead>
                         <tbody className="divide-y divide-gray-200">
                           {resultados.diputados.map((candidato, index) => (
-                            <tr key={candidato.id} className={index < 3 ? 'bg-purple-50' : ''}>
+                            <tr key={candidato.id} className={
+                              index < 23 ? 'bg-green-50' : 'bg-gray-50'
+                            }>
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <div className="flex items-center">
                                   <span className={`inline-flex items-center justify-center h-8 w-8 rounded-full text-sm font-bold text-white ${
                                     index === 0 ? 'bg-yellow-500' : 
                                     index === 1 ? 'bg-gray-400' : 
-                                    index === 2 ? 'bg-orange-400' : 'bg-gray-600'
+                                    index === 2 ? 'bg-orange-400' : 
+                                    index < 23 ? 'bg-green-600' : 'bg-red-500'
                                   }`}>
                                     {candidato.posicion}
                                   </span>
-                                  {index < 3 && <span className="ml-2 text-xl">
-                                    {index === 0 ? '🏆' : index === 1 ? '🥈' : '🥉'}
+                                  {index < 23 && <span className="ml-2 text-xl">
+                                    {index === 0 ? '🏆' : 
+                                     index === 1 ? '🥈' : 
+                                     index === 2 ? '🥉' : '✅'}
                                   </span>}
+                                  {index >= 23 && <span className="ml-2 text-xl">❌</span>}
                                 </div>
                               </td>
                               <td className="px-6 py-4">
                                 <div className="text-sm font-medium text-gray-900">
                                   {candidato.nombre}
+                                  {index < 23 && (
+                                    <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                      ELEGIDO
+                                    </span>
+                                  )}
+                                  {index >= 23 && (
+                                    <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                      NO ELEGIDO
+                                    </span>
+                                  )}
                                 </div>
                               </td>
                               <td className="px-6 py-4">
