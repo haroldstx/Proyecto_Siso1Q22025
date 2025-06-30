@@ -48,7 +48,7 @@ function VotarAlcalde() {
   }, [navigate]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/Backend/get_alcaldes.php')
+    fetch('/Backend/get_alcaldes.php')
       .then(res => res.json())
       .then(data => setAlcaldes(data))
       .catch(err => console.error('Error al cargar alcaldes:', err));
@@ -71,7 +71,7 @@ function VotarAlcalde() {
       ids_diputados: idsDiputados
     };
 
-    fetch('http://localhost:8000/Backend/enviar_votos.php', {
+    fetch('/Backend/enviar_votos.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)

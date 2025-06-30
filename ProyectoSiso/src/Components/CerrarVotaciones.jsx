@@ -32,7 +32,7 @@ const CerrarVotaciones = () => {
    useEffect(() => {
   const obtenerEstadoVotacion = async () => {
     try {
-      const response = await fetch('http://localhost:8000/Backend/estado_votacion.php');
+      const response = await fetch('/Backend/estado_votacion.php');
       const text = await response.text(); // leer como texto plano
       const abierto = text.trim() === 'true'; // convertir a boolean
       setVotacionesAbiertas(abierto);
@@ -70,9 +70,9 @@ const CerrarVotaciones = () => {
         try {
             let url = '';
             if (actionType === 'cerrar') {
-                url = 'http://localhost:8000/Backend/cerrar_votacion.php';
+                url = '/Backend/cerrar_votacion.php';
             } else if (actionType === 'abrir') {
-                url = 'http://localhost:8000/Backend/abrir_votacion.php';
+                url = '/Backend/abrir_votacion.php';
             }
 
             const response = await fetch(url, {

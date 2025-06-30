@@ -44,7 +44,7 @@ function VotarPresidente() {
   }, [navigate]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/Backend/get_presidentes.php')
+    fetch('/Backend/get_presidentes.php')
       .then(res => res.json())
       .then(data => setPresidentes(data))
       .catch(err => console.error('Error al cargar presidentes:', err));

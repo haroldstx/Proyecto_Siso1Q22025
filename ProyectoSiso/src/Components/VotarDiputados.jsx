@@ -36,7 +36,7 @@ function VotarDiputados() {
   }, [navigate]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/Backend/get_diputados.php')
+    fetch('/Backend/get_diputados.php')
       .then(res => res.json())
       .then(data => setDiputados(data))
       .catch(err => console.error('Error al cargar diputados:', err));
